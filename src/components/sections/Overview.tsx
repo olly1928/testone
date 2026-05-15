@@ -19,6 +19,7 @@ function fmt(n: number | null | undefined, prefix = '', suffix = '') {
   return `${prefix}${n.toLocaleString()}${suffix}`
 }
 
+type GeoRow = { region?: string; name?: string; revenue_bn: number | null; growth_rate: number | null }
 type GeoEntry = { name: string; revenue: number | null; growth: number | null }
 
 function GeoTooltip({
@@ -78,11 +79,11 @@ export function Overview() {
       label: `€${s.revenue_bn}bn${s.revenue_pct != null ? ` · ${s.revenue_pct}%` : ''}`,
     }))
 
-  const geoChartData = regions
+  const geoChartData = (regions as unknown as GeoRow[])
     .filter((r) => r.revenue_bn != null)
     .map((r) => ({
-      name: r.region,
-      revenue: r.revenue_bn,
+      name: r.region ?? r.name ?? '',
+      revenue: r.revenue_bn as number,
       growth: r.growth_rate,
     }))
 
@@ -207,8 +208,9 @@ export function Overview() {
               <YAxis
                 type="category"
                 dataKey="name"
-                width={180}
-                tick={{ fill: 'var(--chart-text)', fontSize: 12 }}
+                width={200}
+                interval={0}
+                tick={{ fill: 'var(--chart-text)', fontSize: 11 }}
                 axisLine={false}
                 tickLine={false}
               />

@@ -22,6 +22,11 @@ type SubDivisionFull = SubDivision & {
   detail?: string | null
 }
 
+type DrawerItem =
+  | { kind: 'segment'; segment: SegmentFull }
+  | { kind: 'subdivision'; sub: SubDivisionFull }
+  | null
+
 interface Props {
   onExecSelect: (exec: Executive) => void
 }
@@ -37,6 +42,82 @@ function Stat({ label, value }: { label: string; value: string }) {
   )
 }
 
+// ── Status drawer (shared by segments and sub-divisions) ──────────────────────
+
+function StatusDrawer({
+  item,
+  status,
+  onClose,
+  onStatusChange,
+}: {
+  item: DrawerItem
+  status: PenetrationStatus
+  onClose: () => void
+  onStatusChange: (s: PenetrationStatus) => void
+}) {
+  const isOpen = item !== null
+  const title = item
+    ? item.kind === 'segment' ? item.segment.name : item.sub.name
+    : ''
+  const description = item
+    ? item.kind === 'segment'
+      ? (item.segment.description ?? null)
+      : (item.sub.description ?? item.sub.detail ?? null)
+    : null
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={onClose}
+      />
+
+      {/* Drawer panel */}
+      <div
+        className={`fixed top-0 right-0 h-full w-full max-w-sm bg-white dark:bg-slate-900 shadow-2xl z-50 flex flex-col transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        {item && (
+          <>
+            <div className="flex items-start justify-between p-5 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex-1 min-w-0 pr-3">
+                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wide mb-0.5">
+                  {item.kind === 'segment' ? 'Segment' : 'Sub-division'}
+                </p>
+                <h2 className="text-base font-bold text-slate-900 dark:text-white leading-snug">
+                  {title}
+                </h2>
+              </div>
+              <button
+                onClick={onClose}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex-shrink-0"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-5 space-y-5">
+              {description && (
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {description}
+                </p>
+              )}
+              <div>
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                  Penetration Status
+                </p>
+                <PenetrationSelector current={status} onChange={onStatusChange} />
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </>
+  )
+}
+
 // ── Segment card ──────────────────────────────────────────────────────────────
 
 interface CardProps {
@@ -46,8 +127,8 @@ interface CardProps {
   segStatus: PenetrationStatus
   subStatusMap: Record<string, PenetrationStatus>
   onExecSelect: (exec: Executive) => void
-  onSegmentStatus: (id: string, s: PenetrationStatus) => void
-  onSubStatus: (id: string, s: PenetrationStatus) => void
+  onSegmentClick: (segment: SegmentFull) => void
+  onSubClick: (sub: SubDivisionFull) => void
 }
 
 function SegmentCard({
@@ -57,8 +138,8 @@ function SegmentCard({
   segStatus,
   subStatusMap,
   onExecSelect,
-  onSegmentStatus,
-  onSubStatus,
+  onSegmentClick,
+  onSubClick,
 }: CardProps) {
   const [open, setOpen] = useState(false)
   const leader = segment.leader_id
@@ -83,9 +164,16 @@ function SegmentCard({
             <span className="text-base font-semibold text-slate-900 dark:text-white">
               {segment.name}
             </span>
-            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_TAG[segStatus]}`}>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                onSegmentClick(segment)
+              }}
+              className={`px-2 py-0.5 rounded-full text-xs font-medium hover:opacity-80 transition-opacity ${STATUS_TAG[segStatus]}`}
+            >
               {segStatus}
-            </span>
+            </button>
           </div>
           <div className="flex items-center gap-3 mt-0.5 flex-wrap">
             {revLine && (
@@ -157,7 +245,7 @@ function SegmentCard({
                   return (
                     <div
                       key={sub.id}
-                      className="bg-slate-50 dark:bg-slate-700/40 rounded-lg p-3 space-y-2"
+                      className="bg-slate-50 dark:bg-slate-700/40 rounded-lg p-3"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -170,16 +258,14 @@ function SegmentCard({
                             </div>
                           )}
                         </div>
-                        <span
-                          className={`flex-shrink-0 px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_TAG[subStatus]}`}
+                        <button
+                          type="button"
+                          onClick={() => onSubClick(sub)}
+                          className={`flex-shrink-0 px-2 py-0.5 rounded-full text-xs font-medium hover:opacity-80 transition-opacity ${STATUS_TAG[subStatus]}`}
                         >
                           {subStatus}
-                        </span>
+                        </button>
                       </div>
-                      <PenetrationSelector
-                        current={subStatus}
-                        onChange={(s) => onSubStatus(sub.id, s)}
-                      />
                     </div>
                   )
                 })}
@@ -218,17 +304,6 @@ function SegmentCard({
               <p className="text-sm text-blue-900 dark:text-blue-100">{segment.box_relevance}</p>
             </div>
           )}
-
-          {/* Segment penetration status selector */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
-              Penetration Status
-            </h4>
-            <PenetrationSelector
-              current={segStatus}
-              onChange={(s) => onSegmentStatus(segment.id, s)}
-            />
-          </div>
         </div>
       )}
     </div>
@@ -238,6 +313,7 @@ function SegmentCard({
 // ── Main component ────────────────────────────────────────────────────────────
 
 export function Segments({ onExecSelect }: Props) {
+  const [drawerItem, setDrawerItem] = useState<DrawerItem>(null)
   const { segments, loading: segLoading } = useSegments()
   const { subDivisions, loading: subLoading } = useSubDivisions()
   const { executives } = useExecutives()
@@ -252,6 +328,21 @@ export function Segments({ onExecSelect }: Props) {
   const subStatusMap: Record<string, PenetrationStatus> = Object.fromEntries(
     Object.entries(subTracking).map(([k, v]) => [k, v.penetration_status]),
   )
+
+  const drawerStatus: PenetrationStatus = drawerItem
+    ? drawerItem.kind === 'segment'
+      ? (segTracking[drawerItem.segment.id]?.penetration_status ?? 'Unmapped')
+      : (subTracking[drawerItem.sub.id]?.penetration_status ?? 'Unmapped')
+    : 'Unmapped'
+
+  const handleDrawerStatusChange = (status: PenetrationStatus) => {
+    if (!drawerItem) return
+    if (drawerItem.kind === 'segment') {
+      void upsertSegment(drawerItem.segment.id, { penetration_status: status })
+    } else {
+      void upsertSubDivision(drawerItem.sub.id, { penetration_status: status })
+    }
+  }
 
   if (segLoading || subLoading) {
     return (
@@ -271,7 +362,7 @@ export function Segments({ onExecSelect }: Props) {
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Segments</h1>
       <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
-        {segsFull.length} business segment{segsFull.length !== 1 ? 's' : ''} · click to expand
+        {segsFull.length} business segment{segsFull.length !== 1 ? 's' : ''} · click status badge to update · click card to expand
       </p>
       <div className="space-y-3">
         {segsFull.map((seg) => (
@@ -283,11 +374,18 @@ export function Segments({ onExecSelect }: Props) {
             segStatus={segTracking[seg.id]?.penetration_status ?? 'Unmapped'}
             subStatusMap={subStatusMap}
             onExecSelect={onExecSelect}
-            onSegmentStatus={(id, s) => void upsertSegment(id, { penetration_status: s })}
-            onSubStatus={(id, s) => void upsertSubDivision(id, { penetration_status: s })}
+            onSegmentClick={(segment) => setDrawerItem({ kind: 'segment', segment })}
+            onSubClick={(sub) => setDrawerItem({ kind: 'subdivision', sub })}
           />
         ))}
       </div>
+
+      <StatusDrawer
+        item={drawerItem}
+        status={drawerStatus}
+        onClose={() => setDrawerItem(null)}
+        onStatusChange={handleDrawerStatusChange}
+      />
     </div>
   )
 }
