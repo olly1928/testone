@@ -12,7 +12,7 @@ export function useOutreachSequence() {
       .from('outreach_sequence')
       .select('*')
       .order('order_index')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: OutreachSequenceItem[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setSequence(data ?? [])
         setLoading(false)

@@ -10,7 +10,7 @@ export function useContactTracking() {
     supabase
       .from('contact_tracking')
       .select('*')
-      .then(({ data }) => {
+      .then(({ data }: { data: ContactTracking[] | null }) => {
         if (data) {
           const map: Record<string, ContactTracking> = {}
           for (const row of data) map[row.executive_id] = row
@@ -24,7 +24,7 @@ export function useContactTracking() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'contact_tracking' },
-        (payload) => {
+        (payload: { new: Record<string, unknown> }) => {
           const row = payload.new as ContactTracking
           setTrackingMap((prev) => ({ ...prev, [row.executive_id]: row }))
         },

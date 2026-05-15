@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useTheme } from '../../context/ThemeContext'
 import { SyncIndicator } from './SyncIndicator'

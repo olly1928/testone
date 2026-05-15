@@ -11,7 +11,7 @@ export function useRiskFactors() {
     supabase
       .from('risk_factors')
       .select('*')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: RiskFactor[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setRiskFactors(data ?? [])
         setLoading(false)

@@ -12,7 +12,7 @@ export function useDepartments() {
       .from('departments')
       .select('*')
       .order('name')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: Department[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setDepartments(data ?? [])
         setLoading(false)

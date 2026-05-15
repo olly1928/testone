@@ -13,7 +13,7 @@ export function useCompany() {
       .select('*')
       .limit(1)
       .single()
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: Company | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setCompany(data)
         setLoading(false)

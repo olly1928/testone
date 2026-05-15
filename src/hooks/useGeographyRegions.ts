@@ -12,7 +12,7 @@ export function useGeographyRegions() {
       .from('geography_regions')
       .select('*')
       .order('revenue_bn', { ascending: false })
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: GeographyRegion[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setRegions(data ?? [])
         setLoading(false)

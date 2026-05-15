@@ -11,7 +11,7 @@ export function useBoxFit() {
     supabase
       .from('box_fit')
       .select('*')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: BoxFitItem[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setBoxFit(data ?? [])
         setLoading(false)

@@ -12,7 +12,7 @@ export function useTechStack() {
       .from('tech_stack')
       .select('*')
       .order('category')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: TechStackItem[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setTechStack(data ?? [])
         setLoading(false)

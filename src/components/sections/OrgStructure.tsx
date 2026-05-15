@@ -43,7 +43,7 @@ function renderTreeNode(
   node: ExecNode,
   trackingMap: Record<string, ContactTracking>,
   onSelect: (exec: Executive) => void,
-): React.ReactNode {
+) {
   const status: RelationshipStatus =
     trackingMap[node.id]?.relationship_status ?? 'No contact'
 

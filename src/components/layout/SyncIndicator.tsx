@@ -9,7 +9,7 @@ export function SyncIndicator() {
   useEffect(() => {
     const channel = supabase
       .channel('sync-heartbeat')
-      .subscribe((state) => {
+      .subscribe((state: string) => {
         if (state === 'SUBSCRIBED') setStatus('connected')
         else if (state === 'CHANNEL_ERROR' || state === 'TIMED_OUT') setStatus('error')
         else setStatus('connecting')

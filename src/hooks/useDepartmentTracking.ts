@@ -10,7 +10,7 @@ export function useDepartmentTracking() {
     supabase
       .from('department_tracking')
       .select('*')
-      .then(({ data }) => {
+      .then(({ data }: { data: DepartmentTracking[] | null }) => {
         if (data) {
           const map: Record<string, DepartmentTracking> = {}
           for (const row of data) map[row.department_id] = row
@@ -24,7 +24,7 @@ export function useDepartmentTracking() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'department_tracking' },
-        (payload) => {
+        (payload: { new: Record<string, unknown> }) => {
           const row = payload.new as DepartmentTracking
           setTrackingMap((prev) => ({ ...prev, [row.department_id]: row }))
         },

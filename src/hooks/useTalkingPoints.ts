@@ -11,7 +11,7 @@ export function useTalkingPoints() {
     supabase
       .from('talking_points')
       .select('*')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: TalkingPoint[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setTalkingPoints(data ?? [])
         setLoading(false)

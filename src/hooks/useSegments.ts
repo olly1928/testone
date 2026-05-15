@@ -12,7 +12,7 @@ export function useSegments() {
       .from('segments')
       .select('*')
       .order('name')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: Segment[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setSegments(data ?? [])
         setLoading(false)

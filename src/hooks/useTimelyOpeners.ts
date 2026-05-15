@@ -11,7 +11,7 @@ export function useTimelyOpeners() {
     supabase
       .from('timely_openers')
       .select('*')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: TimelyOpener[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setTimelyOpeners(data ?? [])
         setLoading(false)

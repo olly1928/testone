@@ -12,7 +12,7 @@ export function useSubDivisions() {
       .from('sub_divisions')
       .select('*')
       .order('name')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: SubDivision[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setSubDivisions(data ?? [])
         setLoading(false)

@@ -12,7 +12,7 @@ export function useExecutives() {
       .from('executives')
       .select('*')
       .order('name')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: Executive[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setExecutives(data ?? [])
         setLoading(false)

@@ -10,7 +10,7 @@ export function useSubDivisionTracking() {
     supabase
       .from('subdivision_tracking')
       .select('*')
-      .then(({ data }) => {
+      .then(({ data }: { data: SubDivisionTracking[] | null }) => {
         if (data) {
           const map: Record<string, SubDivisionTracking> = {}
           for (const row of data) map[row.subdivision_id] = row
@@ -24,7 +24,7 @@ export function useSubDivisionTracking() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'subdivision_tracking' },
-        (payload) => {
+        (payload: { new: Record<string, unknown> }) => {
           const row = payload.new as SubDivisionTracking
           setTrackingMap((prev) => ({ ...prev, [row.subdivision_id]: row }))
         },

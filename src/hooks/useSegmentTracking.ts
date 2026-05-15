@@ -10,7 +10,7 @@ export function useSegmentTracking() {
     supabase
       .from('segment_tracking')
       .select('*')
-      .then(({ data }) => {
+      .then(({ data }: { data: SegmentTracking[] | null }) => {
         if (data) {
           const map: Record<string, SegmentTracking> = {}
           for (const row of data) map[row.segment_id] = row
@@ -24,7 +24,7 @@ export function useSegmentTracking() {
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'segment_tracking' },
-        (payload) => {
+        (payload: { new: Record<string, unknown> }) => {
           const row = payload.new as SegmentTracking
           setTrackingMap((prev) => ({ ...prev, [row.segment_id]: row }))
         },

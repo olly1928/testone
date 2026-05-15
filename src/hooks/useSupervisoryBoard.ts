@@ -12,7 +12,7 @@ export function useSupervisoryBoard() {
       .from('supervisory_board')
       .select('*')
       .order('name')
-      .then(({ data, error }) => {
+      .then(({ data, error }: { data: SupervisoryBoardMember[] | null; error: { message: string } | null }) => {
         if (error) setError(new Error(error.message))
         else setMembers(data ?? [])
         setLoading(false)

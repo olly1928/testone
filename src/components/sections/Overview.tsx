@@ -175,8 +175,8 @@ export function Overview() {
                 tickLine={false}
               />
               <Tooltip
-                formatter={(v: number, _name: string, entry: { payload?: { growth?: number | null } }) => {
-                  const g = entry.payload?.growth
+                formatter={(v: number, _name: unknown, entry: { payload?: Record<string, unknown> }) => {
+                  const g = entry.payload?.['growth'] as number | null | undefined
                   const growthStr = g != null ? ` (${g > 0 ? '+' : ''}${g}%)` : ''
                   return [`€${v.toFixed(2)}bn${growthStr}`, 'Revenue']
                 }}
