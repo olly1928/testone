@@ -46,7 +46,7 @@ function AppShell() {
           />
           <Route path="/segments" element={<Segments onExecSelect={setSelectedExec} />} />
           <Route path="/departments" element={<Departments onExecSelect={setSelectedExec} />} />
-          <Route path="/contacts" element={<KeyContacts />} />
+          <Route path="/contacts" element={<KeyContacts onExecSelect={setSelectedExec} />} />
           <Route path="/tech" element={<TechLandscape />} />
           <Route path="/intelligence" element={<ProspectingIntelligence />} />
         </Routes>
