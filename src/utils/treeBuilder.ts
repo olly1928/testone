@@ -4,16 +4,17 @@ export function buildExecutiveTree(executives: Executive[]): ExecNode[] {
   const nodeMap = new Map<string, ExecNode>()
 
   for (const exec of executives) {
-    nodeMap.set(exec.id, { ...exec, children: [] })
+    nodeMap.set(exec.id.trim(), { ...exec, children: [] })
   }
 
   const roots: ExecNode[] = []
 
   for (const node of nodeMap.values()) {
-    if (!node.reports_to || !nodeMap.has(node.reports_to)) {
+    const reportsTo = node.reports_to?.trim() ?? null
+    if (!reportsTo || !nodeMap.has(reportsTo)) {
       roots.push(node)
     } else {
-      nodeMap.get(node.reports_to)!.children.push(node)
+      nodeMap.get(reportsTo)!.children.push(node)
     }
   }
 

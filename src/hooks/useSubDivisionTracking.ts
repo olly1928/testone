@@ -38,6 +38,16 @@ export function useSubDivisionTracking() {
 
   const upsertSubDivision = useCallback(
     async (subdivision_id: string, patch: { penetration_status?: PenetrationStatus }) => {
+      setTrackingMap((prev) => {
+        const existing = prev[subdivision_id]
+        const optimistic: SubDivisionTracking = {
+          id: existing?.id ?? '',
+          subdivision_id,
+          penetration_status: patch.penetration_status ?? existing?.penetration_status ?? 'Unmapped',
+          updated_at: new Date().toISOString(),
+        }
+        return { ...prev, [subdivision_id]: optimistic }
+      })
       const { error } = await supabase.from('subdivision_tracking').upsert(
         {
           subdivision_id,

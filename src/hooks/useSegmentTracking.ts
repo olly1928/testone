@@ -38,6 +38,16 @@ export function useSegmentTracking() {
 
   const upsertSegment = useCallback(
     async (segment_id: string, patch: { penetration_status?: PenetrationStatus }) => {
+      setTrackingMap((prev) => {
+        const existing = prev[segment_id]
+        const optimistic: SegmentTracking = {
+          id: existing?.id ?? '',
+          segment_id,
+          penetration_status: patch.penetration_status ?? existing?.penetration_status ?? 'Unmapped',
+          updated_at: new Date().toISOString(),
+        }
+        return { ...prev, [segment_id]: optimistic }
+      })
       const { error } = await supabase.from('segment_tracking').upsert(
         {
           segment_id,

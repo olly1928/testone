@@ -7,6 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  LabelList,
 } from 'recharts'
 import { useCompany } from '../../hooks/useCompany'
 import { useSegments } from '../../hooks/useSegments'
@@ -16,6 +17,32 @@ import { StatCard } from '../shared/StatCard'
 function fmt(n: number | null | undefined, prefix = '', suffix = '') {
   if (n == null) return '—'
   return `${prefix}${n.toLocaleString()}${suffix}`
+}
+
+type GeoEntry = { name: string; revenue: number | null; growth: number | null }
+
+function GeoTooltip({
+  active,
+  payload,
+}: {
+  active?: boolean
+  payload?: Array<{ payload: GeoEntry }>
+}) {
+  if (!active || !payload?.length) return null
+  const d = payload[0].payload
+  return (
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-lg p-3 text-xs shadow-lg">
+      <p className="font-semibold text-slate-800 dark:text-slate-100 mb-1">{d.name}</p>
+      {d.revenue != null && (
+        <p className="text-slate-600 dark:text-slate-300">Revenue: €{d.revenue.toFixed(2)}bn</p>
+      )}
+      {d.growth != null && (
+        <p className={d.growth > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+          Growth: {d.growth > 0 ? '+' : ''}{d.growth}%
+        </p>
+      )}
+    </div>
+  )
 }
 
 function ChartContainer({ title, children }: { title: string; children: React.ReactNode }) {
@@ -44,7 +71,12 @@ export function Overview() {
 
   const segChartData = segments
     .filter((s) => s.revenue_bn != null)
-    .map((s) => ({ name: s.name, revenue: s.revenue_bn }))
+    .sort((a, b) => (b.revenue_bn ?? 0) - (a.revenue_bn ?? 0))
+    .map((s) => ({
+      name: s.name,
+      revenue: s.revenue_bn,
+      label: `€${s.revenue_bn}bn${s.revenue_pct != null ? ` · ${s.revenue_pct}%` : ''}`,
+    }))
 
   const geoChartData = regions
     .filter((r) => r.revenue_bn != null)
@@ -110,7 +142,7 @@ export function Overview() {
             <BarChart
               layout="vertical"
               data={segChartData}
-              margin={{ top: 0, right: 20, bottom: 0, left: 0 }}
+              margin={{ top: 0, right: 120, bottom: 0, left: 0 }}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -140,7 +172,13 @@ export function Overview() {
                   fontSize: 12,
                 }}
               />
-              <Bar dataKey="revenue" fill="var(--chart-bar)" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="revenue" fill="var(--chart-bar)" radius={[0, 4, 4, 0]}>
+                <LabelList
+                  dataKey="label"
+                  position="right"
+                  style={{ fill: 'var(--chart-text)', fontSize: 11 }}
+                />
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </ChartContainer>
@@ -153,7 +191,7 @@ export function Overview() {
             <BarChart
               layout="vertical"
               data={geoChartData}
-              margin={{ top: 0, right: 20, bottom: 0, left: 0 }}
+              margin={{ top: 0, right: 100, bottom: 0, left: 0 }}
             >
               <CartesianGrid
                 strokeDasharray="3 3"
@@ -174,18 +212,7 @@ export function Overview() {
                 axisLine={false}
                 tickLine={false}
               />
-              <Tooltip
-                formatter={(v: number, _name: unknown, entry: { payload?: Record<string, unknown> }) => {
-                  const g = entry.payload?.['growth'] as number | null | undefined
-                  const growthStr = g != null ? ` (${g > 0 ? '+' : ''}${g}%)` : ''
-                  return [`€${v.toFixed(2)}bn${growthStr}`, 'Revenue']
-                }}
-                contentStyle={{
-                  border: '1px solid var(--chart-grid)',
-                  borderRadius: 8,
-                  fontSize: 12,
-                }}
-              />
+              <Tooltip content={<GeoTooltip />} />
               <Bar dataKey="revenue" radius={[0, 4, 4, 0]}>
                 {geoChartData.map((entry, index) => {
                   const g = entry.growth
@@ -197,6 +224,12 @@ export function Overview() {
                         : 'var(--chart-bar-negative)'
                   return <Cell key={index} fill={fill} />
                 })}
+                <LabelList
+                  dataKey="revenue"
+                  position="right"
+                  formatter={(v: number) => `€${v.toFixed(1)}bn`}
+                  style={{ fill: 'var(--chart-text)', fontSize: 11 }}
+                />
               </Bar>
             </BarChart>
           </ResponsiveContainer>

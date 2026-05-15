@@ -109,26 +109,31 @@ export function OrgStructure({ onExecSelect }: OrgStructureProps) {
 
       {/* Scrollable org chart */}
       <div className="overflow-x-auto pb-6">
-        {roots.map((root) => {
-          const rootStatus: RelationshipStatus =
-            trackingMap[root.id]?.relationship_status ?? 'No contact'
-          return (
-            <div key={root.id} className="mb-12 inline-block min-w-full">
-              <Tree
-                label={<OrgNodeCard exec={root} status={rootStatus} onClick={onExecSelect} />}
-                lineColor={lineColor}
-                lineWidth="1px"
-                lineHeight="30px"
-                nodePadding="8px"
-                lineBorderRadius="6px"
-              >
-                {root.children.map((child) =>
-                  renderTreeNode(child, trackingMap, onExecSelect),
-                )}
-              </Tree>
-            </div>
-          )
-        })}
+        <p className="text-xs text-slate-400 dark:text-slate-500 mb-4 italic">
+          Scroll horizontally to explore
+        </p>
+        <div className="min-w-max">
+          {roots.map((root) => {
+            const rootStatus: RelationshipStatus =
+              trackingMap[root.id]?.relationship_status ?? 'No contact'
+            return (
+              <div key={root.id} className="mb-12">
+                <Tree
+                  label={<OrgNodeCard exec={root} status={rootStatus} onClick={onExecSelect} />}
+                  lineColor={lineColor}
+                  lineWidth="1px"
+                  lineHeight="30px"
+                  nodePadding="8px"
+                  lineBorderRadius="6px"
+                >
+                  {root.children.map((child) =>
+                    renderTreeNode(child, trackingMap, onExecSelect),
+                  )}
+                </Tree>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

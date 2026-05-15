@@ -28,13 +28,13 @@ function DeptCard({
   executives,
   deptStatus,
   onExecSelect,
-  onStatusChange,
+  onClick,
 }: {
   dept: DeptFull
   executives: Executive[]
   deptStatus: PenetrationStatus
   onExecSelect: (exec: Executive) => void
-  onStatusChange: (id: string, s: PenetrationStatus) => void
+  onClick: (dept: DeptFull) => void
 }) {
   const leader = dept.leader_id
     ? (executives.find((e) => e.id === dept.leader_id) ?? null)
@@ -52,7 +52,10 @@ function DeptCard({
   const note = dept.initiative ?? dept.transformation_note ?? null
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 flex flex-col gap-3">
+    <div
+      onClick={() => onClick(dept)}
+      className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 flex flex-col gap-3 cursor-pointer hover:border-primary hover:shadow-sm transition-all"
+    >
       {/* Name + status tag */}
       <div className="flex items-start justify-between gap-2">
         <h3 className="text-sm font-semibold text-slate-900 dark:text-white leading-snug">
@@ -78,7 +81,10 @@ function DeptCard({
         {leader ? (
           <button
             type="button"
-            onClick={() => onExecSelect(leader)}
+            onClick={(e) => {
+              e.stopPropagation()
+              onExecSelect(leader)
+            }}
             className="text-primary hover:underline"
           >
             {leader.name}
@@ -113,13 +119,132 @@ function DeptCard({
           </span>
         )}
       </div>
-
-      {/* Penetration status selector */}
-      <PenetrationSelector
-        current={deptStatus}
-        onChange={(s) => onStatusChange(dept.id, s)}
-      />
     </div>
+  )
+}
+
+// ── Department drawer ─────────────────────────────────────────────────────────
+
+function DeptDrawer({
+  dept,
+  executives,
+  deptStatus,
+  onClose,
+  onStatusChange,
+  onExecSelect,
+}: {
+  dept: DeptFull | null
+  executives: Executive[]
+  deptStatus: PenetrationStatus
+  onClose: () => void
+  onStatusChange: (id: string, s: PenetrationStatus) => void
+  onExecSelect: (exec: Executive) => void
+}) {
+  const isOpen = dept !== null
+  const leader = dept?.leader_id
+    ? (executives.find((e) => e.id === dept.leader_id) ?? null)
+    : null
+  const leaderName = leader ? leader.name : (dept?.leader_name_override ?? null)
+  const note = dept ? (dept.initiative ?? dept.transformation_note ?? null) : null
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={onClose}
+      />
+
+      {/* Drawer panel */}
+      <div
+        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-slate-900 shadow-2xl z-50 flex flex-col transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      >
+        {dept && (
+          <>
+            {/* Header */}
+            <div className="flex items-start justify-between p-5 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex-1 min-w-0">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white truncate">
+                  {dept.name}
+                </h2>
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_TAG[deptStatus]}`}
+                  >
+                    {deptStatus}
+                  </span>
+                  {(dept.prospecting_priority === 'high' || dept.is_high_priority) && (
+                    <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                      High priority
+                    </span>
+                  )}
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                className="ml-3 p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 flex-shrink-0"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Scrollable body */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-5">
+              {/* Description */}
+              {dept.description && (
+                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {dept.description}
+                </p>
+              )}
+
+              {/* Leader */}
+              <div className="text-sm">
+                <span className="font-medium text-slate-500 dark:text-slate-400">Leader: </span>
+                {leader ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onExecSelect(leader)
+                      onClose()
+                    }}
+                    className="text-primary hover:underline font-medium"
+                  >
+                    {leader.name}
+                  </button>
+                ) : leaderName ? (
+                  <span className="text-slate-700 dark:text-slate-200">{leaderName}</span>
+                ) : (
+                  <span className="text-slate-400 dark:text-slate-500">—</span>
+                )}
+              </div>
+
+              {/* Initiative / note */}
+              {note && (
+                <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-amber-700 dark:text-amber-300 uppercase tracking-wide mb-1">
+                    Initiative
+                  </p>
+                  <p className="text-sm text-amber-900 dark:text-amber-100">{note}</p>
+                </div>
+              )}
+
+              {/* Penetration status */}
+              <div>
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                  Penetration Status
+                </p>
+                <PenetrationSelector
+                  current={deptStatus}
+                  onChange={(s) => onStatusChange(dept.id, s)}
+                />
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </>
   )
 }
 
@@ -220,6 +345,7 @@ const FILTERS: { key: FilterKey; label: string; tooltip?: string }[] = [
 
 export function Departments({ onExecSelect }: Props) {
   const [filter, setFilter] = useState<FilterKey>('all')
+  const [selectedDept, setSelectedDept] = useState<DeptFull | null>(null)
   const { departments, loading } = useDepartments()
   const { executives } = useExecutives()
   const { trackingMap, upsertDepartment } = useDepartmentTracking()
@@ -267,7 +393,7 @@ export function Departments({ onExecSelect }: Props) {
         Departments &amp; Functions
       </h1>
       <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
-        {depts.length} department{depts.length !== 1 ? 's' : ''} · {filtered.length} shown
+        {depts.length} department{depts.length !== 1 ? 's' : ''} · {filtered.length} shown · click a card to view details
       </p>
 
       {/* Filter bar */}
@@ -306,7 +432,7 @@ export function Departments({ onExecSelect }: Props) {
               executives={executives}
               deptStatus={statusMap[dept.id] ?? 'Unmapped'}
               onExecSelect={onExecSelect}
-              onStatusChange={(id, s) => void upsertDepartment(id, { penetration_status: s })}
+              onClick={setSelectedDept}
             />
           ))}
         </div>
@@ -317,6 +443,16 @@ export function Departments({ onExecSelect }: Props) {
         departments={depts}
         executives={executives}
         statusMap={statusMap}
+        onExecSelect={onExecSelect}
+      />
+
+      {/* Department detail drawer */}
+      <DeptDrawer
+        dept={selectedDept}
+        executives={executives}
+        deptStatus={selectedDept ? (statusMap[selectedDept.id] ?? 'Unmapped') : 'Unmapped'}
+        onClose={() => setSelectedDept(null)}
+        onStatusChange={(id, s) => void upsertDepartment(id, { penetration_status: s })}
         onExecSelect={onExecSelect}
       />
     </div>

@@ -41,6 +41,17 @@ export function useContactTracking() {
       executive_id: string,
       patch: { relationship_status?: RelationshipStatus; notes?: string },
     ) => {
+      setTrackingMap((prev) => {
+        const existing = prev[executive_id]
+        const optimistic: ContactTracking = {
+          id: existing?.id ?? '',
+          executive_id,
+          relationship_status: patch.relationship_status ?? existing?.relationship_status ?? 'No contact',
+          notes: patch.notes !== undefined ? patch.notes : (existing?.notes ?? null),
+          updated_at: new Date().toISOString(),
+        }
+        return { ...prev, [executive_id]: optimistic }
+      })
       const { error } = await supabase.from('contact_tracking').upsert(
         {
           executive_id,

@@ -38,6 +38,16 @@ export function useDepartmentTracking() {
 
   const upsertDepartment = useCallback(
     async (department_id: string, patch: { penetration_status?: PenetrationStatus }) => {
+      setTrackingMap((prev) => {
+        const existing = prev[department_id]
+        const optimistic: DepartmentTracking = {
+          id: existing?.id ?? '',
+          department_id,
+          penetration_status: patch.penetration_status ?? existing?.penetration_status ?? 'Unmapped',
+          updated_at: new Date().toISOString(),
+        }
+        return { ...prev, [department_id]: optimistic }
+      })
       const { error } = await supabase.from('department_tracking').upsert(
         {
           department_id,

@@ -240,7 +240,9 @@ export function Segments({ onExecSelect }: Props) {
   const { trackingMap: segTracking, upsertSegment } = useSegmentTracking()
   const { trackingMap: subTracking, upsertSubDivision } = useSubDivisionTracking()
 
-  const segsFull = segments as unknown as SegmentFull[]
+  const segsFull = (segments as unknown as SegmentFull[])
+    .slice()
+    .sort((a, b) => (b.revenue_bn ?? 0) - (a.revenue_bn ?? 0))
   const subsFull = subDivisions as unknown as SubDivisionFull[]
 
   const subStatusMap: Record<string, PenetrationStatus> = Object.fromEntries(

@@ -2,6 +2,17 @@ import { useState, useEffect } from 'react'
 import type { Executive, ContactTracking, RelationshipStatus } from '../../types/database'
 import { useToast } from '../../context/ToastContext'
 
+function formatTimestamp(iso: string): string {
+  try {
+    const d = new Date(iso)
+    const date = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+    const time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+    return `${date} at ${time}`
+  } catch {
+    return iso
+  }
+}
+
 const RELATIONSHIP_STATUSES: RelationshipStatus[] = [
   'No contact',
   'Researched',
@@ -263,6 +274,19 @@ export function ExecDrawer({
                 >
                   {saving ? 'Saving…' : 'Save notes'}
                 </button>
+                {tracking?.notes && (
+                  <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-800/60 rounded-lg">
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mb-1.5 font-medium uppercase tracking-wide">
+                      Saved note
+                    </p>
+                    <p className="text-sm text-slate-700 dark:text-slate-200 whitespace-pre-wrap">
+                      {tracking.notes}
+                    </p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-1.5">
+                      Last updated {formatTimestamp(tracking.updated_at)}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </>
