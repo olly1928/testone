@@ -360,7 +360,10 @@ export function Segments({ onExecSelect }: Props) {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Segments</h1>
+      <p className="text-[11px] font-mono font-medium uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">
+        Business Units
+      </p>
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-1">Segments</h1>
       <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
         {segsFull.length} business segment{segsFull.length !== 1 ? 's' : ''} · click status badge to update · click card to expand
       </p>

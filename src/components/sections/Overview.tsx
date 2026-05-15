@@ -48,8 +48,8 @@ function GeoTooltip({
 
 function ChartContainer({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-      <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-4">{title}</h3>
+    <div className="bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-xl p-5 shadow-card">
+      <h3 className="text-xs font-mono font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">{title}</h3>
       {children}
     </div>
   )
@@ -91,7 +91,10 @@ export function Overview() {
     <div className="p-6 max-w-5xl mx-auto space-y-6">
       {/* Page title */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
+        <p className="text-[11px] font-mono font-medium uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">
+          Account Overview
+        </p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
           {company?.name ?? 'Philips'}
         </h1>
         {company?.tagline && (
@@ -127,7 +130,7 @@ export function Overview() {
       {/* Why this account */}
       {company?.why_this_account && (
         <div className="bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-xl p-5">
-          <h2 className="text-xs font-semibold text-primary uppercase tracking-wide mb-2">
+          <h2 className="text-[11px] font-mono font-semibold text-primary uppercase tracking-widest mb-2">
             Why this account
           </h2>
           <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed whitespace-pre-line">

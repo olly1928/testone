@@ -6,6 +6,10 @@
   html {
     font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
   }
+
+  body {
+    @apply bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100;
+  }
 }
 
 /* Chart color tokens — consumed by recharts via fill/stroke props */

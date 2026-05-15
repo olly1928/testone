@@ -134,7 +134,7 @@ export function ExecDrawer({
 
       {/* Drawer panel */}
       <div
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-slate-900 shadow-2xl z-50 flex flex-col transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 h-full w-full max-w-[440px] bg-white dark:bg-slate-900 shadow-2xl z-50 flex flex-col transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         {exec && (
           <>
@@ -198,7 +198,7 @@ export function ExecDrawer({
               {/* Outreach angle */}
               {exec.outreach_angle && (
                 <div className="bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-lg p-3">
-                  <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-1">
+                  <p className="text-[11px] font-mono font-semibold text-primary uppercase tracking-widest mb-1">
                     Outreach angle
                   </p>
                   <p className="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
@@ -231,7 +231,7 @@ export function ExecDrawer({
 
               {/* Relationship status */}
               <div>
-                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2">
+                <p className="text-[11px] font-mono font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-2">
                   Relationship density
                 </p>
                 <div className="flex flex-col gap-1.5">
@@ -241,8 +241,9 @@ export function ExecDrawer({
                       <button
                         key={s}
                         onClick={() => handleStatusClick(s)}
-                        className={`text-left text-sm px-3 py-2 rounded-lg border font-medium transition-colors ${isActive ? activeStatusColour[s] : statusColour[s]} hover:opacity-80`}
+                        className={`text-left text-sm px-3 py-2 rounded-lg border font-medium transition-all flex items-center gap-2 ${isActive ? activeStatusColour[s] : statusColour[s]} hover:opacity-80`}
                       >
+                        <span className="w-2 h-2 rounded-full flex-shrink-0 opacity-70 bg-current" />
                         {s}
                       </button>
                     )
@@ -253,7 +254,7 @@ export function ExecDrawer({
               {/* Notes */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                  <p className="text-[11px] font-mono font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
                     Notes
                   </p>
                   <span className="text-xs text-slate-400 dark:text-slate-500">

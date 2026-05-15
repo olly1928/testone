@@ -79,16 +79,16 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const navContent = (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-4 py-5 border-b border-slate-200 dark:border-slate-700">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded bg-primary flex items-center justify-center flex-shrink-0">
-            <span className="text-white text-xs font-bold">P</span>
+      <div className="px-4 py-5 border-b border-slate-200/60 dark:border-slate-800">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded bg-primary flex items-center justify-center flex-shrink-0 shadow-card">
+            <span className="text-white text-xs font-bold font-mono">P</span>
           </div>
           <div>
             <p className="text-sm font-semibold text-slate-900 dark:text-white leading-tight">
               Philips
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Prospecting Dashboard</p>
+            <p className="text-[11px] text-slate-400 dark:text-slate-500 font-mono uppercase tracking-wide">Prospecting</p>
           </div>
         </div>
       </div>
@@ -102,10 +102,10 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
             end={item.path === '/'}
             onClick={onMobileClose}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium mb-1 transition-colors ${
+              `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium mb-0.5 transition-all border-l-[2.5px] ${
                 isActive
-                  ? 'bg-primary text-white'
-                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
+                  ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-white border-primary shadow-card'
+                  : 'text-slate-500 dark:text-slate-400 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-700 dark:hover:text-slate-200'
               }`
             }
           >
@@ -116,11 +116,11 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-slate-200 dark:border-slate-700 p-2">
+      <div className="border-t border-slate-200/60 dark:border-slate-800 p-2">
         <SyncIndicator />
         <button
           onClick={toggleTheme}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors mt-1"
+          className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-700 dark:hover:text-slate-200 transition-all mt-1"
         >
           {isDark ? (
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -140,7 +140,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex w-60 flex-shrink-0 flex-col h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 fixed left-0 top-0 z-30">
+      <aside className="hidden md:flex w-60 flex-shrink-0 flex-col h-screen bg-slate-50 dark:bg-slate-900 border-r border-slate-200/60 dark:border-slate-800 fixed left-0 top-0 z-30">
         {navContent}
       </aside>
 
@@ -151,7 +151,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
             className="fixed inset-0 bg-black/40"
             onClick={onMobileClose}
           />
-          <aside className="relative w-60 flex-shrink-0 flex flex-col h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 z-50">
+          <aside className="relative w-60 flex-shrink-0 flex flex-col h-screen bg-slate-50 dark:bg-slate-900 border-r border-slate-200/60 dark:border-slate-800 z-50">
             {navContent}
           </aside>
         </div>

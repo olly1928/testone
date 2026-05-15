@@ -19,15 +19,15 @@ export function StatCard({ label, value, subtext }: StatCardProps) {
 
   return (
     <div
-      className="relative bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 cursor-pointer group"
+      className="relative bg-white dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-xl p-5 cursor-pointer group shadow-card hover:shadow-card-md transition-shadow"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={handleCopy}
     >
-      <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">
+      <p className="text-[11px] font-mono font-medium text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">
         {label}
       </p>
-      <p className="text-2xl font-bold text-slate-900 dark:text-white">{value}</p>
+      <p className="text-2xl font-bold font-mono text-slate-900 dark:text-white tabular-nums">{value}</p>
       {subtext && (
         <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">{subtext}</p>
       )}

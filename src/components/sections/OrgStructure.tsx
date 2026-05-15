@@ -22,7 +22,7 @@ function OrgNodeCard({ exec, status, onClick }: OrgNodeProps) {
   return (
     <button
       onClick={() => onClick(exec)}
-      className="group inline-block text-left rounded-lg border bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-600 px-3 py-2 min-w-[120px] max-w-[180px] shadow-sm hover:border-primary hover:shadow-md transition-all cursor-pointer"
+      className="group inline-block text-left rounded-md border bg-white dark:bg-slate-800 border-slate-200/80 dark:border-slate-600 px-3 py-2 min-w-[120px] max-w-[180px] shadow-card hover:border-primary hover:shadow-card-md transition-all cursor-pointer"
     >
       <p className="text-xs font-semibold text-slate-800 dark:text-slate-100 truncate group-hover:text-primary transition-colors">
         {exec.name}
@@ -90,7 +90,10 @@ export function OrgStructure({ onExecSelect, trackingMap }: OrgStructureProps) {
   return (
     <div className="p-6">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Org Structure</h1>
+        <p className="text-[11px] font-mono font-medium uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-1">
+          Organization
+        </p>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Org Structure</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           Click any node to open the executive detail panel. Status badges update live.
         </p>
