@@ -207,7 +207,7 @@ export function Overview() {
               <YAxis
                 type="category"
                 dataKey="name"
-                width={150}
+                width={180}
                 tick={{ fill: 'var(--chart-text)', fontSize: 12 }}
                 axisLine={false}
                 tickLine={false}

@@ -10,6 +10,7 @@ import type { Segment, SubDivision, Executive, PenetrationStatus } from '../../t
 // Extend base types with DB columns not yet reflected in the TypeScript interfaces
 type SegmentFull = Segment & {
   revenue?: string | null
+  revenue_share?: string | null
   growth_pct?: number | null
   margin_pct?: number | null
   products?: string | null
@@ -64,6 +65,11 @@ function SegmentCard({
     ? (executives.find((e) => e.id === segment.leader_id) ?? null)
     : null
 
+  const revPct = segment.revenue_share ?? (segment.revenue_pct != null ? `${segment.revenue_pct}%` : null)
+  const revLine = segment.revenue_bn != null
+    ? `€${segment.revenue_bn}bn${revPct ? ` · ${revPct} of revenue` : ''}`
+    : null
+
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
       {/* Collapsed header */}
@@ -82,10 +88,8 @@ function SegmentCard({
             </span>
           </div>
           <div className="flex items-center gap-3 mt-0.5 flex-wrap">
-            {segment.revenue_bn != null && (
-              <span className="text-sm text-slate-500 dark:text-slate-400">
-                €{segment.revenue_bn}B revenue
-              </span>
+            {revLine && (
+              <span className="text-sm text-slate-500 dark:text-slate-400">{revLine}</span>
             )}
             {leader && (
               <button

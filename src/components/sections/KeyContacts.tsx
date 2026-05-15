@@ -1,8 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useExecutives } from '../../hooks/useExecutives'
-import { useContactTracking } from '../../hooks/useContactTracking'
 import { useSegments } from '../../hooks/useSegments'
-import type { Executive, RelationshipStatus, ExecutiveLevel } from '../../types/database'
+import type { Executive, RelationshipStatus, ExecutiveLevel, ContactTracking } from '../../types/database'
 
 // Extend Executive with DB column not yet in the base interface
 type ExecFull = Executive & {
@@ -15,6 +14,7 @@ type SortDir = 'asc' | 'desc'
 
 interface Props {
   onExecSelect: (exec: Executive) => void
+  trackingMap: Record<string, ContactTracking>
 }
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -108,14 +108,13 @@ function SortArrow({ active, dir }: { active: boolean; dir: SortDir }) {
 
 // ── Main component ────────────────────────────────────────────────────────────
 
-export function KeyContacts({ onExecSelect }: Props) {
+export function KeyContacts({ onExecSelect, trackingMap }: Props) {
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<FilterKey>('all')
   const [sortKey, setSortKey] = useState<SortKey>('priority')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
 
   const { executives, loading: execLoading } = useExecutives()
-  const { trackingMap, loading: trackingLoading } = useContactTracking()
   const { segments } = useSegments()
 
   const segmentMap = useMemo(
@@ -194,7 +193,7 @@ export function KeyContacts({ onExecSelect }: Props) {
       })
   }, [executives, search, filter, sortKey, sortDir, segmentMap, trackingMap])
 
-  const loading = execLoading || trackingLoading
+  const loading = execLoading
 
   if (loading) {
     return (

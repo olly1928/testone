@@ -1,6 +1,5 @@
 import { Tree, TreeNode } from 'react-organizational-chart'
 import { useExecutives } from '../../hooks/useExecutives'
-import { useContactTracking } from '../../hooks/useContactTracking'
 import { buildExecutiveTree } from '../../utils/treeBuilder'
 import { useTheme } from '../../context/ThemeContext'
 import type { ExecNode, Executive, ContactTracking, RelationshipStatus } from '../../types/database'
@@ -59,14 +58,14 @@ function renderTreeNode(
 
 interface OrgStructureProps {
   onExecSelect: (exec: Executive) => void
+  trackingMap: Record<string, ContactTracking>
 }
 
-export function OrgStructure({ onExecSelect }: OrgStructureProps) {
+export function OrgStructure({ onExecSelect, trackingMap }: OrgStructureProps) {
   const { executives, loading: execLoading } = useExecutives()
-  const { trackingMap, loading: trackLoading } = useContactTracking()
   const { isDark } = useTheme()
 
-  const loading = execLoading || trackLoading
+  const loading = execLoading
 
   if (loading) {
     return (

@@ -42,11 +42,11 @@ function AppShell() {
           <Route path="/" element={<Overview />} />
           <Route
             path="/org"
-            element={<OrgStructure onExecSelect={setSelectedExec} />}
+            element={<OrgStructure onExecSelect={setSelectedExec} trackingMap={trackingMap} />}
           />
           <Route path="/segments" element={<Segments onExecSelect={setSelectedExec} />} />
           <Route path="/departments" element={<Departments onExecSelect={setSelectedExec} />} />
-          <Route path="/contacts" element={<KeyContacts onExecSelect={setSelectedExec} />} />
+          <Route path="/contacts" element={<KeyContacts onExecSelect={setSelectedExec} trackingMap={trackingMap} />} />
           <Route path="/tech" element={<TechLandscape />} />
           <Route path="/intelligence" element={<ProspectingIntelligence onExecSelect={setSelectedExec} />} />
         </Routes>
