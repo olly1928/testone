@@ -25,7 +25,7 @@ export function useContactTracking() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'contact_tracking' },
         (payload: { new: Record<string, unknown> }) => {
-          const row = payload.new as ContactTracking
+          const row = payload.new as unknown as ContactTracking
           setTrackingMap((prev) => ({ ...prev, [row.executive_id]: row }))
         },
       )

@@ -25,7 +25,7 @@ export function useSegmentTracking() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'segment_tracking' },
         (payload: { new: Record<string, unknown> }) => {
-          const row = payload.new as SegmentTracking
+          const row = payload.new as unknown as SegmentTracking
           setTrackingMap((prev) => ({ ...prev, [row.segment_id]: row }))
         },
       )

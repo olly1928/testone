@@ -25,7 +25,7 @@ export function useSubDivisionTracking() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'subdivision_tracking' },
         (payload: { new: Record<string, unknown> }) => {
-          const row = payload.new as SubDivisionTracking
+          const row = payload.new as unknown as SubDivisionTracking
           setTrackingMap((prev) => ({ ...prev, [row.subdivision_id]: row }))
         },
       )

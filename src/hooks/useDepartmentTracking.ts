@@ -25,7 +25,7 @@ export function useDepartmentTracking() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'department_tracking' },
         (payload: { new: Record<string, unknown> }) => {
-          const row = payload.new as DepartmentTracking
+          const row = payload.new as unknown as DepartmentTracking
           setTrackingMap((prev) => ({ ...prev, [row.department_id]: row }))
         },
       )
