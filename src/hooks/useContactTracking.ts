@@ -20,7 +20,7 @@ export function useContactTracking() {
       })
 
     const channel = supabase
-      .channel('contact_tracking_changes')
+      .channel(`contact_tracking_${Math.random().toString(36).slice(2, 9)}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'contact_tracking' },

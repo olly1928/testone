@@ -20,7 +20,7 @@ export function useSubDivisionTracking() {
       })
 
     const channel = supabase
-      .channel('subdivision_tracking_changes')
+      .channel(`subdivision_tracking_${Math.random().toString(36).slice(2, 9)}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'subdivision_tracking' },

@@ -20,7 +20,7 @@ export function useSegmentTracking() {
       })
 
     const channel = supabase
-      .channel('segment_tracking_changes')
+      .channel(`segment_tracking_${Math.random().toString(36).slice(2, 9)}`)
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'segment_tracking' },
