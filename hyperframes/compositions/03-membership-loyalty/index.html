@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" data-hyperframes-composition="03-membership-loyalty" data-duration-ms="8000" data-fps="30">
+<head>
+<meta charset="utf-8">
+<title>Costco Q3 FY2026 — Membership &amp; Loyalty</title>
+<style>
+  :root{
+    --bg-0:#05070d; --bg-1:#0a1128; --bg-2:#0f1a3a;
+    --costco-red:#E31837; --costco-red-bright:#ff3b52;
+    --costco-blue:#003DA5; --costco-blue-bright:#3987e5;
+    --ink-primary:#ffffff; --ink-secondary:#aab4c8; --ink-muted:#5c6788;
+    --surface-card:rgba(255,255,255,0.045); --border-soft:rgba(255,255,255,0.09);
+    --w:1920px; --h:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{width:100%;height:100%;background:#000;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;overflow:hidden;}
+  #viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000;}
+  #stage{
+    position:relative;width:var(--w);height:var(--h);
+    background:
+      radial-gradient(ellipse 1100px 700px at 74% 30%, rgba(57,135,229,0.20), transparent 60%),
+      radial-gradient(ellipse 900px 600px at 10% 90%, rgba(227,24,55,0.10), transparent 60%),
+      linear-gradient(155deg, var(--bg-1) 0%, var(--bg-0) 55%, #030409 100%);
+    color:var(--ink-primary); transform-origin:center center; overflow:hidden;
+  }
+  #stage::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0.05;
+    background:repeating-linear-gradient(-45deg, #fff 0 2px, transparent 2px 44px);
+    mask-image:radial-gradient(ellipse 1400px 900px at 60% 20%, #000 0%, transparent 70%);}
+  #stage::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 260px 40px rgba(0,0,0,0.55);}
+
+  .eyebrow{position:absolute;top:92px;left:120px;right:340px;font-size:19px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:var(--ink-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:14px;}
+  .eyebrow .dot{width:9px;height:9px;border-radius:50%;background:var(--costco-red);box-shadow:0 0 14px 2px rgba(227,24,55,0.7);}
+  .wordmark{position:absolute;top:84px;right:120px;font-size:26px;font-weight:900;letter-spacing:0.06em;color:var(--ink-primary);}
+  .wordmark span{color:var(--costco-red);}
+
+  footer{position:absolute;left:0;right:0;bottom:0;height:104px;display:flex;align-items:center;justify-content:space-between;padding:0 120px;border-top:1px solid var(--border-soft);background:linear-gradient(0deg, rgba(0,0,0,0.35), transparent);}
+  footer .brand{font-size:19px;font-weight:800;letter-spacing:0.14em;color:var(--ink-secondary);text-transform:uppercase;}
+  footer .brand b{color:var(--ink-primary);}
+  footer .source{font-size:15px;color:var(--ink-muted);letter-spacing:0.02em;}
+  footer .pager{display:flex;gap:8px;}
+  footer .pager i{width:7px;height:7px;border-radius:50%;background:var(--border-soft);display:block;}
+  footer .pager i.active{background:var(--costco-red);box-shadow:0 0 10px 1px rgba(227,24,55,.8);}
+  .accentbar{position:absolute;left:0;bottom:104px;height:4px;width:100%;background:linear-gradient(90deg, var(--costco-red) 0%, var(--costco-blue-bright) 60%, transparent 100%);transform-origin:left center;}
+
+  /* ---- scene-specific ---- */
+  .scene{position:absolute;inset:0;padding:0 120px;}
+  .hero-label{position:absolute;top:196px;left:120px;font-size:26px;font-weight:700;letter-spacing:0.08em;color:var(--ink-secondary);text-transform:uppercase;}
+  .hero-number{position:absolute;top:236px;left:120px;font-size:150px;font-weight:900;letter-spacing:-0.02em;line-height:1;display:flex;align-items:baseline;gap:14px;
+    background:linear-gradient(180deg,#ffffff 0%, #d7e3ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero-number .unit{font-size:68px;color:var(--ink-secondary);-webkit-text-fill-color:var(--ink-secondary);}
+  .hero-sub{position:absolute;top:396px;left:120px;font-size:24px;color:var(--ink-secondary);}
+
+  .gauges{position:absolute;top:500px;left:120px;right:120px;bottom:230px;display:flex;align-items:center;justify-content:space-around;}
+  .gauge{position:relative;width:280px;height:280px;display:flex;align-items:center;justify-content:center;flex-direction:column;}
+  .gauge svg{position:absolute;top:0;left:0;width:100%;height:100%;}
+  .gauge .pct{font-size:58px;font-weight:900;color:var(--ink-primary);}
+  .gauge .lbl{position:absolute;bottom:-38px;font-size:19px;font-weight:700;letter-spacing:0.05em;color:var(--ink-secondary);text-transform:uppercase;white-space:nowrap;text-align:center;width:340px;}
+</style>
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+    <div class="eyebrow"><span class="dot"></span> Q3 FISCAL 2026 &nbsp;·&nbsp; 13 WEEKS ENDED MAY 10, 2026</div>
+    <div class="wordmark">CO<span>ST</span>CO</div>
+
+    <div class="scene">
+      <div class="hero-label">Membership &amp; Loyalty</div>
+      <div class="hero-number"><span id="memNum">0.0</span><span class="unit">M</span></div>
+      <div class="hero-sub">Total cardholders worldwide, up from 141.5M a year ago</div>
+
+      <div class="gauges">
+        <div class="gauge">
+          <svg viewBox="0 0 220 220">
+            <circle cx="110" cy="110" r="92" stroke="rgba(255,255,255,0.08)" stroke-width="16" fill="none"/>
+            <circle id="gauge1" cx="110" cy="110" r="92" stroke="#3987e5" stroke-width="16" fill="none" stroke-linecap="round" transform="rotate(-90 110 110)" stroke-dasharray="578.05" stroke-dashoffset="578.05"/>
+          </svg>
+          <div class="pct"><span id="gauge1pct">0</span>%</div>
+          <div class="lbl">U.S. &amp; Canada renewal rate</div>
+        </div>
+        <div class="gauge">
+          <svg viewBox="0 0 220 220">
+            <circle cx="110" cy="110" r="92" stroke="rgba(255,255,255,0.08)" stroke-width="16" fill="none"/>
+            <circle id="gauge2" cx="110" cy="110" r="92" stroke="#E31837" stroke-width="16" fill="none" stroke-linecap="round" transform="rotate(-90 110 110)" stroke-dasharray="578.05" stroke-dashoffset="578.05"/>
+          </svg>
+          <div class="pct"><span id="gauge2pct">0</span>%</div>
+          <div class="lbl">Worldwide renewal rate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accentbar" id="accentbar"></div>
+    <footer>
+      <div class="brand">Costco Wholesale Corporation <b>&nbsp;·&nbsp;Financial Highlights</b></div>
+      <div class="source">Source: Costco Q3 &amp; YTD Fiscal 2026 operating results, released May 28, 2026</div>
+      <div class="pager"><i></i><i></i><i class="active"></i><i></i><i></i><i></i></div>
+    </footer>
+  </div>
+</div>
+
+<script>
+const stage = document.getElementById('stage');
+function scaleStage(){ const s = Math.min(window.innerWidth/1920, window.innerHeight/1080); stage.style.transform = 'scale('+s+')'; }
+window.addEventListener('resize', scaleStage); scaleStage();
+
+const DURATION = Number(document.documentElement.dataset.durationMs || 8000);
+const animations = []; const counters = [];
+function regAnim(el, keyframes, options){ const anim = el.animate(keyframes, Object.assign({fill:'both', easing:'cubic-bezier(.16,1,.3,1)'}, options)); anim.pause(); animations.push(anim); return anim; }
+function easeOutExpo(x){ return x<=0?0:(x>=1?1:1-Math.pow(2,-10*x)); }
+function regCounter(el, cfg){ counters.push(Object.assign({el, delay:0, duration:1000, decimals:0, prefix:'', suffix:'', easing:easeOutExpo}, cfg)); }
+function fmt(n, decimals){ return n.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+function render(t){
+  for(const a of animations){ a.currentTime = Math.max(0, Math.min(t, a.effect.getTiming().delay + a.effect.getTiming().duration)); }
+  for(const c of counters){ const p = Math.min(1, Math.max(0, (t - c.delay)/c.duration)); const val = c.from + (c.to - c.from) * c.easing(p); c.el.textContent = (c.prefix||'') + fmt(val, c.decimals) + (c.suffix||''); }
+}
+let hfPaused = false;
+window.__hfSeek = function(t){ hfPaused = true; render(t); };
+window.__hfPlay = function(){ hfPaused = false; startT = null; requestAnimationFrame(loop); };
+window.__hfDuration = DURATION;
+
+/* ---- scene setup ---- */
+const CIRC = 578.05;
+regCounter(document.getElementById('memNum'), {from:141.5, to:148.5, delay:250, duration:1700, decimals:1});
+regCounter(document.getElementById('gauge1pct'), {from:0, to:92.2, delay:900, duration:1600, decimals:1});
+regCounter(document.getElementById('gauge2pct'), {from:0, to:89.7, delay:1050, duration:1600, decimals:1});
+
+regAnim(document.getElementById('gauge1'), [{strokeDashoffset:CIRC},{strokeDashoffset:CIRC*(1-0.922)}], {delay:900, duration:1600});
+regAnim(document.getElementById('gauge2'), [{strokeDashoffset:CIRC},{strokeDashoffset:CIRC*(1-0.897)}], {delay:1050, duration:1600});
+
+regAnim(document.getElementById('accentbar'), [{transform:'scaleX(0)'},{transform:'scaleX(1)'}], {delay:0, duration:900, easing:'ease-out'});
+regAnim(document.querySelector('.hero-label'), [{opacity:0},{opacity:1}], {delay:0, duration:500, easing:'ease-out'});
+regAnim(document.querySelector('.hero-number'), [{opacity:0, transform:'translateY(18px)'},{opacity:1, transform:'translateY(0)'}], {delay:150, duration:700, easing:'ease-out'});
+regAnim(document.querySelector('.hero-sub'), [{opacity:0},{opacity:1}], {delay:500, duration:600, easing:'ease-out'});
+regAnim(document.querySelectorAll('.gauge')[0], [{opacity:0, transform:'scale(0.9)'},{opacity:1, transform:'scale(1)'}], {delay:650, duration:700, easing:'ease-out'});
+regAnim(document.querySelectorAll('.gauge')[1], [{opacity:0, transform:'scale(0.9)'},{opacity:1, transform:'scale(1)'}], {delay:800, duration:700, easing:'ease-out'});
+
+let startT = null;
+function loop(ts){ if(hfPaused) return; if(startT===null) startT = ts; const t = (ts - startT) % DURATION; render(t); requestAnimationFrame(loop); }
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
